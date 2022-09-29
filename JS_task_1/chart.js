@@ -53,13 +53,22 @@ async function buildPlot() {
     bounded.append("path")
         .attr("d",lineGenerator(data))
         .attr("fill","none")
-        .attr("stroke","lightgrey")
+        .attr("stroke","blue")
 
     bounded.append("path")
         .attr("d",lineGenerator1(data))
         .attr("fill","none")
         .attr("stroke","red")
 
+    bounded.append("path")
+    //     .datum(data)
+    //     .attr("fill", "none")
+    //     .attr("stroke", "steelblue")
+    //     .attr("stroke-width", 1.5)
+    //     .attr("d", d3.line()
+    //         .x(function(d) { return x(d.date) })
+    //         .y(function(d) { return y(d.value) })
+    //     )
 
 
 }
