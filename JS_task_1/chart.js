@@ -4,7 +4,7 @@ async function buildPlot() {
     //console.table(data);
     const dateParser = d3.timeParse("%Y-%m-%d");
     const yAccessor = (d) => d.temperatureMin;
-    const yTest = (d) => d.temperatureMax;
+    const yTest = (d) => d.temperatureHigh;
     const xAccessor = (d) => dateParser(d.date);
     // Функции для инкапсуляции доступа к колонкам набора данных
 
@@ -27,7 +27,6 @@ async function buildPlot() {
     svg.attr("height",dimension.height);
     svg.attr("width",dimension.width);
     const bounded = svg.append("g");
-    const bounded1 = svg.append("g1");
 
     bounded.style("transform",`translate(${dimension.margin.left}px, ${dimension.margin.top})`);
 
