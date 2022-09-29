@@ -59,6 +59,9 @@ async function buildPlot() {
         .attr("d",lineGenerator1(data))
         .attr("fill","none")
         .attr("stroke","red")
+
+
+
 }
 
 buildPlot();
