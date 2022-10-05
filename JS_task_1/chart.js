@@ -1,75 +1,105 @@
 async function buildPlot() {
-    console.log("Hello world");
-    const data = await d3.json("my_weather_data.json");
-    //console.table(data);
+    const dataset = await d3.json("my_weather_data.json");
     const dateParser = d3.timeParse("%Y-%m-%d");
     const yAccessor = (d) => d.temperatureMin;
-    const yTest = (d) => d.temperatureHigh;
     const xAccessor = (d) => dateParser(d.date);
-    // Функции для инкапсуляции доступа к колонкам набора данных
+    const yAccessor1 = (d) => d.temperatureHigh;
 
-    var dimension = {
-        width: window.innerWidth*0.9,
-        height: 400,
+    let dimensions = {
+        width: window.innerWidth * 0.5,
+        height: 500,
         margin: {
-            top: 15,
-            left: 15,
-            bottom: 15,
-            right: 15
-        }
+            top: 30,
+            right: 20,
+            bottom: 20,
+            left: 30,
+        },
     };
+    dimensions.boundedWidth =
+        dimensions.width - dimensions.margin.left - dimensions.margin.right;
+    dimensions.boundedHeight =
+        dimensions.height - dimensions.margin.top - dimensions.margin.bottom;
 
-    dimension.boundedWidth = dimension.width - dimension.margin.left - dimension.margin.right;
-    dimension.boundedHeight = dimension.height - dimension.margin.top - dimension.margin.bottom;
 
-    const wrapper = d3.select("#wrapper");
-    const svg = wrapper.append("svg")
-    svg.attr("height",dimension.height);
-    svg.attr("width",dimension.width);
-    const bounded = svg.append("g");
+    const wrapper = d3
+        .select("#wrapper")
+        .append("svg")
+        .attr("width", dimensions.width)
+        .attr("height", dimensions.height);
 
-    bounded.style("transform",`translate(${dimension.margin.left}px, ${dimension.margin.top})`);
 
-    const yScaler = d3.scaleLinear()
-        .domain(d3.extent(data, yAccessor))
-        .range([dimension.boundedHeight,0]);
 
-    const yScaler1 = d3.scaleLinear()
-        .domain(d3.extent(data, yTest))
-        .range([dimension.boundedHeight,0]);
+    const bounds = wrapper
+        .append("g")
+        .style(
+            "transform",
+            `translate(${dimensions.margin.left}px,${dimensions.margin.top}px)`
+        );
 
-    const xScaler = d3.scaleTime()
-        .domain(d3.extent(data,xAccessor))
-        .range([0,dimension.boundedWidth]);
 
-    var lineGenerator = d3.line()
-        .x(d => xScaler(xAccessor(d)))
-        .y(d => yScaler(yAccessor(d)));
+    const yScale = d3
+        .scaleLinear()
+        .domain([0,100])
+        .range([dimensions.boundedHeight, 0]);
+    const referenceBandPlacement = yScale(80);
+    const referenceBand = bounds
+        .append("rect")
+        .attr("x", 0)
+        .attr("width", dimensions.boundedWidth)
+        .attr("y", referenceBandPlacement)
+        .attr("height", dimensions.boundedHeight - referenceBandPlacement)
+        .attr("fill", "#ffffff");
 
-    var lineGenerator1 = d3.line()
-        .x(d => xScaler(xAccessor(d)))
-        .y(d => yScaler1(yTest(d)));
+    const xScale = d3
+        .scaleTime()
+        .domain(d3.extent(dataset, xAccessor))
+        .range([0, dimensions.boundedWidth]);
 
-    bounded.append("path")
-        .attr("d",lineGenerator(data))
-        .attr("fill","none")
-        .attr("stroke","blue")
 
-    bounded.append("path")
-        .attr("d",lineGenerator1(data))
-        .attr("fill","none")
-        .attr("stroke","red")
+    const lineGenerator = d3
+        .line()
+        .x((d) => xScale(xAccessor(d)))
+        .y((d) => yScale(yAccessor(d)))
+        .curve(d3.curveBasis);
 
-    bounded.append("path")
-    //     .datum(data)
-    //     .attr("fill", "none")
-    //     .attr("stroke", "steelblue")
-    //     .attr("stroke-width", 1.5)
-    //     .attr("d", d3.line()
-    //         .x(function(d) { return x(d.date) })
-    //         .y(function(d) { return y(d.value) })
-    //     )
+    const lineGenerator2 = d3
+        .line()
+        .x((d) => xScale(xAccessor(d)))
+        .y((d) => yScale(yAccessor1(d)))
+        .curve(d3.curveBasis);
 
+
+    const line = bounds
+        .append("path")
+        .attr("d", lineGenerator(dataset))
+        .attr("fill", "none")
+        .attr("stroke", "Yellow")
+        .attr("stroke-width", 1);
+
+    const line1 = bounds
+        .append("path")
+        .attr("d", lineGenerator2(dataset))
+        .attr("fill", "none")
+        .attr("stroke", "Blue")
+        .attr("stroke-width", 1);
+
+    const yAxisGenerator = d3.axisLeft().scale(yScale);
+    const yAxis = bounds.append("g").call(yAxisGenerator)
+
+
+    const xAxisGenerator = d3.axisBottom().scale(xScale);
+    const xAxis = bounds
+        .append("g")
+        .call(xAxisGenerator.tickFormat(d3.timeFormat("%b,%y")))
+        .style("transform", `translateY(${dimensions.boundedHeight}px)`);
+
+    wrapper
+        .append("g")
+        .style("transform", `translate(${25}px,${15}px)`)
+        .attr("class", "title")
+        .attr("x", dimensions.width / 1)
+        .attr("y", dimensions.margin.top / 1)
+        .attr("text-anchor", "middle")
 
 }
 
