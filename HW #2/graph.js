@@ -125,7 +125,7 @@ async function drawBar(btnId, data) {
         .attr("font-size","10px")
         .attr("text-anchor","middle");
 
-    //coloring buttons
+
     changeActiveButton(btnId);
 }
 
@@ -133,11 +133,11 @@ function changeActiveButton(id){
     if(id == null){
         return 0;
     }
-    //remove active class
+
     const activeButton = document.getElementsByClassName("active");
     activeButton[0].classList.remove("active");
 
-    //add active class to clicked button
+
     const clickedButton = document.getElementById(id)
     clickedButton.classList.add("active");
 }
