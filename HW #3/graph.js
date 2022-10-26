@@ -108,6 +108,14 @@ async function drawBar(btnId, data) {
         .attr("font-size","10px")
         .attr("text-anchor","middle");
 
+    const histogramTitle = bounds.append("text")
+        .attr("x",300)
+        .attr("y",290)
+        .text("Histogram #1")
+        .attr("fill","black")
+        .attr("font-size","20px")
+        .attr("text-anchor","middle");
+
     const yLabel = bounds.append("text")
         .attr("x",15)
         .attr("y",40)
@@ -116,30 +124,20 @@ async function drawBar(btnId, data) {
         .attr("font-size","10px")
         .attr("text-anchor","middle");
 
-    const barText = binGroups.filter(yAccessor)
-        .append("text")
-        .attr("x", d => xScaler(d.x0) + (xScaler(d.x1)-xScaler(d.x0))/2 + shift)
-        .attr("y", d => yScaler(yAccessor(d)) - 5)
-        .text(yAccessor)
-        .attr("fill","black")
-        .attr("font-size","10px")
-        .attr("text-anchor","middle");
-
-
-    changeActiveButton(btnId);
+    buttonChange(btnId);
 }
 
-function changeActiveButton(id){
+function buttonChange(id){
     if(id == null){
         return 0;
     }
 
-    const activeButton = document.getElementsByClassName("active");
-    activeButton[0].classList.remove("active");
+    const buttonActive = document.getElementsByClassName("active");
+    buttonActive[0].classList.remove("active");
 
 
-    const clickedButton = document.getElementById(id)
-    clickedButton.classList.add("active");
+    const buttonClick = document.getElementById(id)
+    buttonClick.classList.add("active");
 }
 
-drawBar(null, "temperatureLow");
+drawBar(null, "temperatureHigh");
