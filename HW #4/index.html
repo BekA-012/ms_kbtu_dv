@@ -10,20 +10,20 @@
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <style media="screen">
     body {
-      background: linear-gradient(80deg,#2F324D 30%,black);
+
       background-repeat: no-repeat;
       height: 100vh;
     }
 
     .axis>.domain, .axis>.tick>line,text{
-      stroke: white;
+      stroke: black;
     }
 
   </style>
 </head>
 
 <body>
-<button type="button" onclick="update()" name="button" style="border-radius: 5px; background: orange;  height: 25px; width: 200px; font-size: 16px;">Press Me</button>
+<button type="button" onclick="update()" name="button" style="border-radius: 10px; background: white;  height: 25px; width: 150px; font-size: 18px;">Randomize</button>
 <div id="output" class="">
 
 </div>
@@ -41,7 +41,7 @@
     }
   }
 
-  var w = 700;
+  var w = 600;
   var h = 450;
 
   var chartMargin = {top: 30, right: 60, bottom: 30, left: 60},
@@ -62,7 +62,7 @@
           .interpolate(d3.interpolateHcl)
 
   var xAxis = d3.axisBottom(x)
-          .ticks(5)
+          .ticks(4)
 
   var yAxis = d3.axisRight(y)
           .ticks(8)
@@ -109,8 +109,8 @@
     d3.selectAll(".circles")
             .data(histoData)
             .transition()
-            .duration(1000)
-            .delay(250)
+            .duration(800)
+            .delay(300)
             .attr("cx", function(d){
               return x(d[0])
             })
